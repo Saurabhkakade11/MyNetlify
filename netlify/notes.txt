@@ -1,0 +1,7 @@
+Tools → Options → Debugging → General
+Look for the checkbox "Enable Diagnostic Tools while debugging".
+
+“GDI leak टाळण्यासाठी: नवीन object तयार करा → DC मध्ये select करा → रंगवा → जुना object परत select करा → delete dynamic object.”
+
+_CrtDumpMemoryLeaks();
+_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
