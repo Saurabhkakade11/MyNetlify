@@ -11,45 +11,69 @@
         padding: 20px;
       }
       .container {
-        max-width: 500px;
+        max-width: 900px;
         margin: 0 auto;
-        position: relative; /* Make container relative for absolute positioning */
       }
-      .file-link {
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* Grid view */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .file-card {
+        background: #f8f8f8;
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .file-card button {
         display: block;
-        margin-bottom: 10px;
-        text-decoration: none;
-        background-color: #4caf50;
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 5px;
+        background: #4caf50;
         color: white;
-        padding: 10px 20px;
-        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
       }
-      .file-link:hover {
-        background-color: #45a049;
+      .file-card button:hover {
+        background: #45a049;
+      }
+
+      /* Preview area */
+      .preview {
+        margin-top: 30px;
+        display: none; /* hidden by default */
+      }
+      .preview h3 {
+        margin-bottom: 10px;
       }
       .pdf-viewer {
         border: 1px solid #ccc;
+        width: 100%;
+        height: 500px;
         margin-bottom: 10px;
       }
-      .external-link {
-        position: absolute;
-        top: 20px; /* Adjust top position as needed */
-        right: 50px; /* Adjust right position as needed */
+      .download-btn {
+        background: #007bff;
         padding: 10px 20px;
-        border-radius: 4px;
+        color: white;
         text-decoration: none;
-        animation: blink-bg 1s infinite alternate; /* Apply blinking animation to background */
-        color: white; /* Initial color */
+        border-radius: 5px;
+        display: inline-block;
       }
-
-      /* Define keyframes for blinking animation */
-      @keyframes blink-bg {
-        0% {
-          background-color: #ff0000;
-        }
-        100% {
-          background-color: #0000ff;
-        }
+      .download-btn:hover {
+        background: #0056b3;
       }
     </style>
   </head>
@@ -57,30 +81,97 @@
     <div class="container">
       <h2>Notes</h2>
 
-      <div class="pdf-viewer">
-        <object
-          data="c++ Notes.pdf"
-          type="application/pdf"
-          width="100%"
-          height="500px"
-        >
-          <p>
-            It appears you don't have a PDF plugin for this browser.
-            <a href="c++ Notes.pdf">Click here to download the PDF file.</a>
-          </p>
-        </object>
+      <!-- Grid of files -->
+      <div class="grid">
+        <div class="file-card">
+          <h4>C++ Notes (PDF)</h4>
+          <button onclick="showPreview('c++ Notes.pdf','C++ Notes (PDF)')">
+            Preview
+          </button>
+        </div>
+
+        <div class="file-card">
+          <h4>Word File</h4>
+          <button onclick="showPreview('notes.docx','Word File')">
+            Preview
+          </button>
+        </div>
+
+        <div class="file-card">
+          <h4>Text File</h4>
+          <button onclick="showPreview('notes.txt','Text File')">
+            Preview
+          </button>
+        </div>
+
+        <!-- New 3 buttons -->
+        <div class="file-card">
+          <h4>Excel File</h4>
+          <button onclick="showPreview('notes.xlsx','Excel File')">
+            Preview
+          </button>
+        </div>
+
+        <div class="file-card">
+          <h4>PowerPoint File</h4>
+          <button onclick="showPreview('notes.pptx','PowerPoint File')">
+            Preview
+          </button>
+        </div>
+
+        <div class="file-card">
+          <h4>Image File</h4>
+          <button onclick="showPreview('image.png','Image File')">
+            Preview
+          </button>
+        </div>
       </div>
 
-      <a href="" class="file-link" download>Word</a>
-      <a href="" class="file-link" download>Text</a>
-      <a href="oldnetlify/c++ Notes.pdf" class="file-link" download>C++ PDF</a>
-
-      <!-- External link -->
-      <a href="" class="external-link" target="_blank" style="font-weight: bold"
-        >Github Link</a
-      >
+      <!-- Preview Area -->
+      <div class="preview" id="previewSection">
+        <h3 id="fileTitle"></h3>
+        <object id="fileViewer" class="pdf-viewer" data="" type=""></object>
+        <a id="downloadBtn" href="" class="download-btn" download>Download</a>
+      </div>
     </div>
+
+    <script>
+      function showPreview(filePath, title) {
+        const preview = document.getElementById("previewSection");
+        const viewer = document.getElementById("fileViewer");
+        const download = document.getElementById("downloadBtn");
+        const fileTitle = document.getElementById("fileTitle");
+
+        preview.style.display = "block";
+        fileTitle.innerText = title;
+
+        // Detect file type
+        if (filePath.endsWith(".pdf")) {
+          viewer.type = "application/pdf";
+        } else if (filePath.endsWith(".docx")) {
+          viewer.type =
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        } else if (filePath.endsWith(".txt")) {
+          viewer.type = "text/plain";
+        } else if (filePath.endsWith(".xlsx")) {
+          viewer.type =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        } else if (filePath.endsWith(".pptx")) {
+          viewer.type =
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+        } else if (
+          filePath.endsWith(".png") ||
+          filePath.endsWith(".jpg") ||
+          filePath.endsWith(".jpeg")
+        ) {
+          viewer.type = "image/png";
+        } else {
+          viewer.type = "";
+        }
+
+        viewer.data = filePath;
+        download.href = filePath;
+      }
+    </script>
   </body>
 </html>
-
-
